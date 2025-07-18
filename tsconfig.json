@@ -1,0 +1,21 @@
+{
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  "compilerOptions": {
+    "baseUrl": "src",
+    "typeRoots": ["src/@types", "node_modules/@types"],
+    "paths": {
+      "pages/*": ["pages/*"],
+      "mocks/*": ["mocks/*"],
+      "features/*": ["features/*"],
+      "widgets/*": ["widgets/*"],
+      "entities/*": ["entities/*"],
+      "shared/*": ["shared/*"],
+      "app/*": ["app/*"],
+      "public/*": ["public/*"],
+      "./*": ["./*"]
+    },
+    "jsx": "react-jsx",
+    "types": ["@testing-library/jest-dom"]
+  }
+}

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+set -e
+
+# Function to handle cleanup
+cleanup() {
+    if [ ! -z "$DEV_PID" ]; then
+        echo "Cleaning up dev server..."
+        kill $DEV_PID 2>/dev/null || true
+        wait $DEV_PID 2>/dev/null || true
+    fi
+}
+
+# Ensure cleanup runs on script exit and interruption
+trap cleanup EXIT
+trap "echo '\nInterrupted!'; exit 130" INT
+
+echo "\nPreparing for commit:"
+
+echo "\n1. Linting"
+pnpm run lint || {
+    echo "\n\033[91mError during linting\033[0m\n"
+    exit 1
+}
+
+echo "\n2. Formatting"
+pnpm run prettier || {
+    echo "\n\033[91mError during formatting\033[0m\n"
+    exit 1
+}
+
+echo "\n3. Building project"
+pnpm run build || {
+    echo "\n\033[91mFailed to build project\033[0m\n"
+    exit 1
+}
+
+echo "\n4. Unit and integration testing"
+pnpm exec vitest run || {
+    echo "\n\033[91mError during testing\033[0m\n"
+    exit 1
+}
+
+echo "\n\033[92mProject is ready for commit!\033[0m\n"
